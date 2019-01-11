@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+th {
+    background-color: lightgray;
+}
+</style>
+
+<head>
+    <meta charset="UTF-8" meta http-equiv="refresh" content="5">
+    <title>Stat</title>
+</head>
+
+<body>
+<table>
+
+<tr>
+    <th>last_check</th></tr>
+<tr>
+{% for k, v in data['stat'].items() %}
+    <td>{{ v }}</td>
+{% endfor %}
+</tr>
+
+<tr>
+    <th>rmq_id</th>
+    <th>project</th>
+    <th>host</th>
+    <th>un_mins</th>
+    <th>comment</th>
+    <th>consumer</th>
+    <th>message</th>
+</tr>
+
+<tr>
+    {% for i in data['statistics'] %}
+        {% if i['rmq_stat_flag']==0 %}
+            <td style="background-color: lightgray">{{ i['rmq_id'] }}</td>
+        {% elif i['rmq_stat_flag']==1 %}
+            <td style="background-color: green">{{ i['rmq_id'] }}</td>
+        {% elif i['rmq_stat_flag']==2 %}
+            <td style="background-color: yellow">{{ i['rmq_id'] }}</td>
+        {% else %}
+            <td style="background-color: red">{{ i['rmq_id'] }}</td>
+        {% endif %}
+        <td>{{ i['project'] }}</td>
+        <td>{{ i['host'] }}</td>
+        <td>{{ i['un_mins'] }}</td>
+        <td>{{ i['comment'] }}</td>
+        <td>{{ i['consumer'] }}</td>
+        {% if i['message']<10 %}
+            <td style="background-color: green">{{ i['message'] }}</td>
+        {% elif i['message']>=10 and i['message']<30 %}
+            <td style="background-color: yellow">{{ i['message'] }}</td>
+        {% else %}
+            <td style="background-color: red">{{ i['message'] }}</td>
+
+{% endif %}
+
+
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
