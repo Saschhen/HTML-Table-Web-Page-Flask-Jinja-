@@ -4,12 +4,18 @@ import requests
 app = Flask(__name__)
 app.debug = True
 
-def get_data():
-    try:
-        url = "http://worker1.datastream.center:9000/stat"
-        r = requests.get(url)
-    except requests.HTTPError as e:
-        raise PipelineServiceError("{reason}".format(reason=e))
+def get_data(data=None):
+    url = "http://worker1.datastream.center:9000/stat"
+    if data is not None:
+        try:
+            r = requests.post(url, data=data)
+        except requests.HTTPError as e:
+            raise PipelineServiceError("{reason}".format(reason=e))
+    else:
+        try:
+            r = requests.get(url)
+        except requests.HTTPError as e:
+            raise PipelineServiceError("{reason}".format(reason=e))
     return r.json()
 
 @app.route('/')
