@@ -11,30 +11,48 @@ th {
 </style>
 
 <head>
-    <meta charset="UTF-8" meta http-equiv="refresh" content="5"> #auto refreshing of the web page every 5 seconds
-    <title>Stat</title> #title of the tab (optional)
+    <meta charset="UTF-8" meta http-equiv="refresh" content="5">
+    <title>Stat</title>
 </head>
 
 <body>
 <table>
 
 <tr>
-    <th>last_check</th></tr>
-<tr>
-{% for k, v in data['stat'].items() %}
-    <td>{{ v }}</td>
-{% endfor %}
+    {% for k, v in data['stat'].items() %}
+        {% if k==None %}
+            NONE
+        {% else %}
+            <th>{{ k }}</th>
+        {% endif %}
+    {% endfor %}
 </tr>
+<tr>
+    {% for k, v in data['stat'].items() %}
+        {% if v==None %}
+            NONE
+        {% else %}
+            <td>{{ v }}</td>
+        {% endif %}
+    {% endfor %}
+</tr>
+</table>
 
-<tr>
-    <th>rmq_id</th>
-    <th>project</th>
-    <th>host</th>
-    <th>un_mins</th>
-    <th>comment</th>
-    <th>consumer</th>
-    <th>message</th>
-</tr>
+<table>
+    {% for k in ['rmq_id', 'project', 'host', 'un_mins'] %}
+        {% if k==None %}
+            NONE
+        {% else %}
+            <th>{{ k }}</th>
+        {% endif %}
+{% endfor %}
+        {%  for k in data['columns'] %}
+            {% if k==None %}
+                NONE
+            {% else %}
+                <th>{{ k }}</th>
+            {% endif %}
+    {% endfor %}
 
 <tr>
     {% for i in data['statistics'] %}
@@ -44,24 +62,37 @@ th {
             <td style="background-color: green">{{ i['rmq_id'] }}</td>
         {% elif i['rmq_stat_flag']==2 %}
             <td style="background-color: yellow">{{ i['rmq_id'] }}</td>
-        {% else %}
+        {% elif i['rmq_stat_flag']>2%}
             <td style="background-color: red">{{ i['rmq_id'] }}</td>
-        {% endif %}
-        <td>{{ i['project'] }}</td>
-        <td>{{ i['host'] }}</td>
-        <td>{{ i['un_mins'] }}</td>
-        <td>{{ i['comment'] }}</td>
-        <td>{{ i['consumer'] }}</td>
-        {% if i['message']<10 %}
-            <td style="background-color: green">{{ i['message'] }}</td>
-        {% elif i['message']>=10 and i['message']<30 %}
-            <td style="background-color: yellow">{{ i['message'] }}</td>
         {% else %}
-            <td style="background-color: red">{{ i['message'] }}</td>
-
-{% endif %}
-
-
+            NONE
+        {% endif %}
+        {% if i['project']==None %}
+            NONE
+        {% else %}
+            <td>{{ i['project'] }}</td>
+        {% endif %}
+        {% if i['host']==None %}
+            NONE
+        {% else %}
+            <td>{{ i['host'] }}</td>
+        {% endif %}
+        {% if i['un_mins']<10 %}
+            <td style="background-color: green">{{ i['un_mins'] }}</td>
+        {% elif i['un_mins']>=10 and i['un_mins']<30 %}
+            <td style="background-color: yellow">{{ i['un_mins'] }}</td>
+        {% elif i['un_mins']>30 %}
+            <td style="background-color: red">{{ i['un_mins'] }}</td>
+         {% else %}
+            NONE
+        {% endif %}
+ {% for k in data['columns'] %}
+     {% if k in data['columns'] %}
+        <td>{{ i[k] }}</td>
+     {% else %}
+        NONE
+    {% endif %}
+  {% endfor %}
 </tr>
 {% endfor %}
 </table>
